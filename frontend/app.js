@@ -1,0 +1,1 @@
+// TODO Main frontend script. Sends requests to the backend and gets weather reports. Displays results, loading states, errors.
