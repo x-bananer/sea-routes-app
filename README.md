@@ -8,6 +8,7 @@
 
 - [S3 Storage Structure](docs/s3_structure.md)
 - [Data Models and API Responses](docs/data_models.md)
+- [Figma Design](https://www.figma.com/design/UktWhTybDFUz3Y86jBLeYi/Untitled?node-id=0-1&t=FIFm8Y7k7JRfBzfS-1)
 
 ## Repo Structure Diagram
 
