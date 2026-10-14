@@ -1,0 +1,7 @@
+-- TODO: 6.1 Create an Amazon Athena table for historical weather data.
+--
+-- The table should:
+-- 1. Read weather data stored in the weather/ folder in S3.
+-- 2. Include the timestamp, latitude, longitude and six weather values.
+-- 3. Use year, month and day as partitions.
+-- 4. Allow SQL queries to find weather records for selected points and times.

@@ -1,4 +1,0 @@
--- TODO: Here we will write the SQL code that later, while setting up our application, we will run in AWS Console in Athena Query Editor to create a table. This table will let Athena read the historical weather data we save in S3.
--- We will define the fields and their types later, based on our JSON files stored in S3. We will also add here the path to these files. AWS documentation for writing this SQL file: https://docs.aws.amazon.com/athena/latest/ug/creating-tables-how-to.html
---
--- Later query_weather_history.py will use the table name and field names from this file to write SQL queries to fetch weather data.
