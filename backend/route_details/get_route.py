@@ -7,8 +7,8 @@
 # 3. Read the route's statistics from route_statistics/{route_id}.json in S3.
 # 4. Call get_current_weather.py to calculate the current weather
 #    conditions for the selected route.
-# 5. Call calculate_conditions_suitability.py to compare the current
-#    weather with the route's previous ratings across weather conditions.
+# 5. Call calculate_conditions_suitability.py to calculate the expected
+#    route rating (1.0–5.0) based on current weather and historical ratings.
 # 6. Combine the route information, statistics, current weather
 #    and suitability into one JSON response.
 # 7. Return the JSON response to the frontend.

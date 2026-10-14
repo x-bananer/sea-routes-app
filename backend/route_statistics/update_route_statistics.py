@@ -11,10 +11,14 @@
 # 5. Read the existing statistics from route_statistics/{route_id}.json in S3.
 # 6. Update the overall average rating and total number of ratings.
 # 7. Compare the trip's weather with the existing weather groups
-#    in ratings_across_conditions.
-# 8. Update the matching group's average rating and number of ratings,
-#    or create a new group if the weather conditions are different.
+#    in ratings_across_conditions, regardless of the trip date.
+# 8. If similar weather conditions are found, update the group's
+#    average weather values, average rating and total number of ratings.
+#    Otherwise, create a new group.
 # 9. Save the updated route statistics to the same JSON file in S3.
+#
+# (Weather groups do not store trip start or end times. These times
+# are only used to find historical weather data for each rating.)
 #
 # (The function updates aggregated statistics. The original user ratings
 # in ratings/ remain unchanged.)

@@ -110,8 +110,6 @@ Amazon S3
   "total_ratings": 42,
   "ratings_across_conditions": [
     {
-      "start_time": "2026-10-13T12:00:00Z",
-      "end_time": "2026-10-13T14:00:00Z",
       "weather": {
         "wind_speed": 7.2,
         "wind_direction": 220,
@@ -124,8 +122,6 @@ Amazon S3
       "total_ratings": 12
     },
     {
-      "start_time": "2026-10-12T09:00:00Z",
-      "end_time": "2026-10-12T11:00:00Z",
       "weather": {
         "wind_speed": 3.1,
         "wind_direction": 180,
@@ -181,8 +177,6 @@ Amazon S3
   "total_ratings": 42,
   "ratings_across_conditions": [
     {
-      "start_time": "2026-10-13T12:00:00Z",
-      "end_time": "2026-10-13T14:00:00Z",
       "weather": {
         "wind_speed": 7.2,
         "wind_direction": 220,
@@ -195,8 +189,6 @@ Amazon S3
       "total_ratings": 12
     },
     {
-      "start_time": "2026-10-12T09:00:00Z",
-      "end_time": "2026-10-12T11:00:00Z",
       "weather": {
         "wind_speed": 3.1,
         "wind_direction": 180,
@@ -217,7 +209,7 @@ Amazon S3
     "air_temperature": 13.67,
     "cloud_cover": 60
   },
-  "suitability": "Good"
+  "suitability": 4.7
 }
 ```
 
@@ -250,7 +242,7 @@ SeaRoutes/
 │   └── route_details/                     # Lambda 5: Route Details Retrieval
 │       ├── get_route.py                   # Reads route, weather and statistics data and returns route details
 │       ├── get_current_weather.py         # Reads the latest weather data from S3, finds the weather at each point of the selected route, and calculates average weather conditions for the whole route
-│       └── calculate_conditions_suitability.py # Compares current weather with past ratings and calculates suitability
+│       └── calculate_conditions_suitability.py # Compares current weather with past ratings and calculates suitability (expected rating)
 │
 ├── sql/
 │   └── create_weather_table.sql           # Defines the Amazon Athena table for historical weather queries
