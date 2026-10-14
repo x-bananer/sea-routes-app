@@ -1,12 +1,13 @@
 import starIcon from "../../assets/icons/star.svg";
 
 export default function Stars({ value = 0, onChange }) {
-	if (!onChange)
+	if (!onChange) {
 		return (
 			<div className="stars">
 				<img className="star-icon" src={starIcon} alt="" />
 			</div>
 		);
+	}
 
 	return (
 		<div className="stars">

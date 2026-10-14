@@ -17,7 +17,9 @@ const weatherItems = [
 ];
 
 export default function WeatherGrid({ weather, compact = false }) {
-	if (!weather) return <p className="empty-message">Current weather is unavailable.</p>;
+	if (!weather) {
+		return <p className="empty-message">Current weather is unavailable.</p>;
+	}
 
 	return (
 		<div className={`weather-grid ${compact ? "weather-grid--compact" : ""}`}>

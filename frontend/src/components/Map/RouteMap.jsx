@@ -15,8 +15,9 @@ function FitRoute({ route }) {
 	const map = useMap();
 	
 	useEffect(() => {
-		if (route?.coordinates?.length)
+		if (route?.coordinates?.length) {
 			map.fitBounds(route.coordinates, { padding: [24, 24], maxZoom: 14 });
+		}
 	}, [map, route]);
 
 	return null;
