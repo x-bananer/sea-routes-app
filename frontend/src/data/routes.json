@@ -1,0 +1,88 @@
+[
+	{
+		"route_id": "route_id_1",
+		"name": "Hietaniemi",
+		"coordinates": [
+			[60.175, 24.912],
+			[60.17, 24.895],
+			[60.162, 24.88]
+		],
+		"overall_rating": 3.9,
+		"total_ratings": 14,
+		"suitability": 4.1,
+		"current_weather": {
+			"wind_speed": 7.3,
+			"wind_direction": 222,
+			"wave_height": 0.5,
+			"water_temperature": 11.7,
+			"air_temperature": 13.7,
+			"cloud_cover": 60
+		},
+		"ratings_across_conditions": [
+			{
+				"average_rating": 4.8,
+				"total_ratings": 12,
+				"weather": {
+					"wind_speed": 7.2,
+					"wind_direction": 222,
+					"wave_height": 0.5,
+					"water_temperature": 11.7,
+					"air_temperature": 13.7,
+					"cloud_cover": 60
+				}
+			},
+			{
+				"average_rating": 3,
+				"total_ratings": 1,
+				"weather": {
+					"wind_speed": 7.2,
+					"wind_direction": 222,
+					"wave_height": 0.5,
+					"water_temperature": 11.7,
+					"air_temperature": 13.7,
+					"cloud_cover": 60
+				}
+			},
+			{
+				"average_rating": 5,
+				"total_ratings": 1,
+				"weather": {
+					"wind_speed": 6.1,
+					"wind_direction": 190,
+					"wave_height": 0.3,
+					"water_temperature": 12.1,
+					"air_temperature": 14.1,
+					"cloud_cover": 42
+				}
+			}
+		]
+	},
+	{
+		"route_id": "route_id_2",
+		"name": "Lauttasaari",
+		"coordinates": [
+			[60.158, 24.882],
+			[60.151, 24.874],
+			[60.147, 24.865]
+		],
+		"overall_rating": null,
+		"total_ratings": 0,
+		"suitability": null,
+		"current_weather": null,
+		"ratings_across_conditions": []
+	},
+	{
+		"route_id": "route_id_3",
+		"name": "Suomenlinna",
+		"coordinates": [
+			[60.145, 24.99],
+			[60.14, 25],
+			[60.134, 25.01]
+		],
+		"overall_rating": null,
+		"total_ratings": 0,
+		"suitability": null,
+		"current_weather": null,
+		"ratings_across_conditions": []
+	}
+]
