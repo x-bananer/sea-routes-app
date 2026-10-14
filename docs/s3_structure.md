@@ -20,11 +20,10 @@ Amazon S3
     │   ├── route_id_1.json
     │   └── route_id_2.json
     │
-    └── weather/
-        └── year=2026/
-            └── month=10/
-                └── day=14/
-                    ├── 12-00.json
+    └── weather/ # Year, when data was stored
+            └── month=10/ # Month, when data was stored
+                └── day=14/ # Day, when data was stored
+                    ├── 12-00.json # Time, when data was stored
                     ├── 12-10.json
                     └── 12-20.json
 ```
