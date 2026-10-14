@@ -1,0 +1,24 @@
+{
+  "name": "searoutes-frontend",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "leaflet": "latest",
+    "react": "latest",
+    "react-dom": "latest",
+    "react-leaflet": "latest"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-react": "latest",
+    "vite": "latest",
+    "vitest": "latest"
+  }
+}
