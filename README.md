@@ -15,11 +15,6 @@
 ```
 SeaRoutes/
 │
-├── frontend/
-│   ├── index.html                         # Main page
-│   ├── app.js                             # Displays routes, weather and ratings, sends API requests
-│   └── style.css                          # Styles
-│
 ├── backend/
 │   │
 │   ├── weather_collection/                # Lambda 1: Weather Collection
@@ -36,25 +31,25 @@ SeaRoutes/
 │   ├── routes/                            # Lambda 4: Route List Retrieval
 │   │   └── get_routes.py                  # Reads all predefined routes from S3
 │   │
-│   └── route_details/                     # Lambda 5: Route Details Retrieval
+│   ├── route_details/                     # Lambda 5: Route Details Retrieval
 │       ├── get_route.py                   # Reads route, weather and statistics data and returns route details
 │       ├── get_current_weather.py         # Reads the latest weather data from S3, finds the weather at each point of the selected route, and calculates average weather conditions for the whole route
 │       └── calculate_conditions_suitability.py # Compares current weather with past ratings and calculates suitability (expected rating)
+│   │
+│   ├── tests/
+│   │   ├── test_collect_weather.py
+│   │   ├── test_save_weather.py
+│   │   ├── test_save_rating.py
+│   │   ├── test_update_route_statistics.py
+│   │   ├── test_query_weather_history.py
+│   │   ├── test_get_routes.py
+│   │   ├── test_get_route.py
+│   │   ├── test_get_current_weather.py
+│   │   └── test_calculate_conditions_suitability.py
+│   │
+│   └── requirements.txt                   # Python dependencies
 │
 ├── sql/
 │   └── create_weather_table.sql           # Defines the Amazon Athena table for historical weather queries
-│
-├── tests/
-│   ├── test_collect_weather.py
-│   ├── test_save_weather.py
-│   ├── test_save_rating.py
-│   ├── test_update_route_statistics.py
-│   ├── test_query_weather_history.py
-│   ├── test_get_routes.py
-│   ├── test_get_route.py
-│   ├── test_get_current_weather.py
-│   └── test_calculate_conditions_suitability.py
-│
-├── requirements.txt                       # Python dependencies
 └── README.md
 ```
