@@ -63,7 +63,14 @@ export default function App() {
 	const handleRating = async (rating) => {
 		await saveRating(routeDetails.id, rating);
 		setModalOpen(false);
-		setNotice("Rating submitted. Statistics will update shortly.");
+
+		try {
+			const details = await getRouteDetails(routeDetails.id);
+			setRouteDetails(details);
+			setNotice("Rating submitted");
+		} catch (error) {
+			setNotice("Rating submitted, but route details could not be refreshed.");
+		}
 	};
 
 	return (
