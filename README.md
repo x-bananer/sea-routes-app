@@ -39,23 +39,6 @@ suitability score when possible.
 - Amazon S3, API Gateway, and Athena
 - Open-Meteo Weather API and Marine API
 
-## Run the frontend
-
-```bash
-cd frontend
-npm install
-npm run dev
-```
-
-Build files for S3 hosting:
-
-```bash
-cd frontend
-npm run build
-```
-
-The build files are in `frontend/dist/`.
-
 ## Team
 
 - Grigorii Tishchuk
