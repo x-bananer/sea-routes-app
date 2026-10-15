@@ -4,7 +4,7 @@
 # The function will:
 # 1. Receive the new rating, including the route ID, trip start time,
 #    trip end time and rating value.
-# 2. Read the selected route from the routes/ folder in S3 to get its points.
+# 2. Read the selected route from the routes/ folder in S3 to get its coordinates.
 # 3. Call query_weather_history.py to find the weather at these points
 #    during the user's trip.
 # 4. Receive the calculated weather conditions for the whole trip.

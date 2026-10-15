@@ -18,7 +18,7 @@ SeaRoutes/
 ├── backend/
 │   │
 │   ├── weather_collection/                # Lambda 1: Weather Collection
-│   │   ├── collect_weather.py             # Gets routes coordinates and requests weather data for them from external APIs
+│   │   ├── collect_weather.py             # Gets route coordinates and requests weather data for them from external APIs
 │   │   └── save_weather.py                # Formats weather data and saves it to S3
 │   │
 │   ├── ratings/                           # Lambda 2: Rating Storage

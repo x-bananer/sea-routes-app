@@ -13,10 +13,13 @@ const colors = ["#087fc6", "#13a354", "#793bbd"];
 
 function FitRoute({ route }) {
 	const map = useMap();
-	
+
 	useEffect(() => {
 		if (route?.coordinates?.length) {
-			map.fitBounds(route.coordinates, { padding: [24, 24], maxZoom: 14 });
+			map.fitBounds(route.coordinates.map((point) => [point["latitude"], point["longitude"]]), {
+				padding: [24, 24],
+				maxZoom: 14,
+			});
 		}
 	}, [map, route]);
 
@@ -41,11 +44,15 @@ export default function RouteMap({
 				url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
 			/>
 			{routes.map((route, index) => {
+				const positions = route.coordinates.map((point) => [
+					point["latitude"],
+					point["longitude"],
+				]);
 				const selected = route.route_id === selectedRoute?.route_id;
 				return (
 					<Fragment key={route.route_id}>
 						<Polyline
-							positions={route.coordinates}
+							positions={positions}
 							pathOptions={{
 								color: colors[index % colors.length],
 								weight: selected ? 6 : 4,
@@ -59,10 +66,10 @@ export default function RouteMap({
 								</Tooltip>
 							)}
 						</Polyline>
-						{route.coordinates.map((position, pointIndex) => (
+						{route.coordinates.map((point, pointIndex) => (
 							<CircleMarker
 								key={`${route.route_id}-${pointIndex}`}
-								center={position}
+								center={[point["latitude"], point["longitude"]]}
 								radius={selected ? 7 : 6}
 								pathOptions={{
 									color: "#ffffff",

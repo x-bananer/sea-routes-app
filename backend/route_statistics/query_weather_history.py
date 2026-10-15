@@ -2,7 +2,7 @@
 # weather data using Amazon Athena.
 #
 # The function will:
-# 1. Receive the route's points and the user's trip start and end times.
+# 1. Receive the route's coordinates and the user's trip start and end times.
 # 2. Create an Athena SQL query to find weather records for these points
 #    during the selected time period.
 # 3. Use the year, month and day of the trip to search the correct
