@@ -1,0 +1,22 @@
+{
+"route_id": "route_03",
+"name": "Eira -Suomenlinna-Karhusaari-Vuosaari",
+"coordinates": [
+{
+"latitude": 60.15358, 
+"longitude": 24.93252
+},
+{
+"latitude": 60.14714, 
+"longitude": 24.98015
+},
+{
+"latitude": 60.17001, 
+"longitude": 25.12298
+},
+{
+"latitude": 60.20048, 
+"longitude": 25.15221
+}
+]
+}
