@@ -6,14 +6,17 @@ import os
 import boto3
 from botocore.exceptions import ClientError
 
-S3_BUCKET_NAME = os.environ.get("S3_BUCKET_NAME","sea-routes-back")
+S3_BUCKET = os.environ.get("S3_BUCKET", "sea-routes-back")
+UPDATE_STATISTICS_FUNCTION_NAME = "update_route_statistics"
 s3 = boto3.client("s3")
+
+lambda_client = boto3.client("lambda")
 
 
 def route_exists(route_id):
     try:
         s3.head_object(
-            Bucket=S3_BUCKET_NAME,
+            Bucket=S3_BUCKET,
             Key=f"routes/{route_id}.json"
         )
         return True
@@ -81,10 +84,16 @@ def lambda_handler(event, context):
         s3_key = f"ratings/{route_id}/{rating_id}.json"
 
         s3.put_object(
-            Bucket=S3_BUCKET_NAME,
+            Bucket=S3_BUCKET,
             Key=s3_key,
             Body=json.dumps(rating_data),
             ContentType="application/json"
+        )
+
+        lambda_client.invoke(
+            FunctionName=UPDATE_STATISTICS_FUNCTION_NAME,
+            InvocationType="Event",
+            Payload=json.dumps(rating_data).encode("utf-8")
         )
 
         print("Route:", route_id)
@@ -100,12 +109,12 @@ def lambda_handler(event, context):
             })
         }
 
-    except ClientError as error:
+    except (ClientError, RuntimeError) as error:
         print("AWS error:", error)
         return {
             "statusCode": 500,
             "body": json.dumps({
-                "error": "Failed to access AWS storage"
+                "error": "Failed to save rating or invoke statistics update"
             })
         }
 
