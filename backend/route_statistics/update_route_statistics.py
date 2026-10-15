@@ -1,11 +1,21 @@
 import json
 import os
 import math
+from datetime import datetime, timezone
+
 import boto3
-from query_weather_history import query_weather_history, calculate_average_weather
+from botocore.exceptions import ClientError
+
+from query_weather_history import query_weather_history
 
 S3_BUCKET = os.environ.get("S3_BUCKET", "sea-routes-back")
 s3 = None
+CORS_HEADERS = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+}
 
 WEATHER_TOLERANCES = {
     "wind_speed": 2.0,
@@ -29,9 +39,19 @@ def load_route(route_id, s3_client=None):
 def load_statistics(route_id, s3_client=None):
     s3_client = s3_client or boto3.client("s3", region_name="us-east-1")
 
-    response = s3_client.get_object(
-        Bucket=S3_BUCKET, Key=f"route_statistics/{route_id}.json"
-    )
+    try:
+        response = s3_client.get_object(
+            Bucket=S3_BUCKET, Key=f"route_statistics/{route_id}.json"
+        )
+    except ClientError as error:
+        if error.response["Error"]["Code"] in ("404", "NoSuchKey", "NotFound"):
+            return {
+                "route_id": route_id,
+                "overall_rating": None,
+                "total_ratings": 0,
+                "ratings_across_conditions": [],
+            }
+        raise
 
     statistics = json.loads(response["Body"].read())
     return statistics
@@ -114,38 +134,83 @@ def update_weather_groups(statistics, weather, rating):
     return statistics
 
 
+def get_rating_data(event):
+    body = event.get("body", event)
+    if isinstance(body, str):
+        body = json.loads(body)
+
+    path_parameters = event.get("pathParameters") or {}
+    route_id = body.get("route_id") or path_parameters.get("route_id")
+    return route_id, body["start_time"], body["end_time"], body["rating"]
+
+
+def validate_rating(route_id, start_time, end_time, rating):
+    if not isinstance(route_id, str) or not route_id.strip():
+        raise ValueError("Invalid route ID")
+    if type(rating) is not int or not 1 <= rating <= 5:
+        raise ValueError("Rating must be an integer from 1 to 5")
+
+    start = datetime.fromisoformat(start_time.replace("Z", "+00:00"))
+    end = datetime.fromisoformat(end_time.replace("Z", "+00:00"))
+    if start.tzinfo is None or end.tzinfo is None:
+        raise ValueError("Trip dates must include a timezone")
+    if start >= end:
+        raise ValueError("Trip end must be after trip start")
+    if end > datetime.now(timezone.utc):
+        raise ValueError("Trip cannot end in the future")
+
+
 def lambda_handler(event, context):
-    print("Received event:", event)
+    if event.get("httpMethod") == "OPTIONS":
+        return {"statusCode": 204, "headers": CORS_HEADERS, "body": ""}
 
-    route_id = event["route_id"]
-    start_time = event["start_time"]
-    end_time = event["end_time"]
-    rating = event["rating"]
+    try:
+        route_id, start_time, end_time, rating = get_rating_data(event)
+        validate_rating(route_id, start_time, end_time, rating)
 
-    route = load_route(route_id)
-    coordinates = route["coordinates"]
+        route = load_route(route_id)
+        average_weather = query_weather_history(
+            route["coordinates"], start_time, end_time
+        )
 
-    print("Route coordinates:", coordinates)
-    average_weather = query_weather_history(coordinates, start_time, end_time)
+        statistics = load_statistics(route_id)
+        updated_statistics = update_average_rating(statistics, rating)
+        updated_statistics = update_weather_groups(
+            updated_statistics, average_weather, rating
+        )
+        save_statistics(route_id, updated_statistics)
 
-    print("Average weather:", average_weather)
-    statistics = load_statistics(route_id)
-    updated_statistics = update_average_rating(statistics, rating)
+        return {
+            "statusCode": 200,
+            "headers": CORS_HEADERS,
+            "body": json.dumps({"message": "Route statistics updated"}),
+        }
 
-    updated_statistics = update_weather_groups(
-        updated_statistics, average_weather, rating
-    )
+    except (AttributeError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return {
+            "statusCode": 400,
+            "headers": CORS_HEADERS,
+            "body": json.dumps({"error": "Invalid rating data"}),
+        }
 
-    save_statistics(route_id, updated_statistics)
+    except ClientError as error:
+        if error.response["Error"]["Code"] in ("404", "NoSuchKey", "NotFound"):
+            return {
+                "statusCode": 404,
+                "headers": CORS_HEADERS,
+                "body": json.dumps({"error": "Route not found"}),
+            }
+        print("AWS error:", error)
+        return {
+            "statusCode": 500,
+            "headers": CORS_HEADERS,
+            "body": json.dumps({"error": "Failed to update route statistics"}),
+        }
 
-    print("Updated route statistics:", updated_statistics)
-
-    print("Route:", route_id)
-    print("Trip start:", start_time)
-    print("Trip end:", end_time)
-    print("Rating:", rating)
-
-    return {
-        "statusCode": 200,
-        "body": json.dumps({"message": "Route statistics updated"}),
-    }
+    except (RuntimeError, TimeoutError) as error:
+        print("Statistics error:", error)
+        return {
+            "statusCode": 500,
+            "headers": CORS_HEADERS,
+            "body": json.dumps({"error": "Failed to update route statistics"}),
+        }

@@ -15,17 +15,6 @@
 }
 ```
 
-`S3: ratings/route_01/rating_id_1.json`
-```json
-{
-  "rating_id": "rating_id_1",
-  "route_id": "route_01",
-  "start_time": "2026-10-13T12:00:00Z",
-  "end_time": "2026-10-13T14:00:00Z",
-  "rating": 5
-}
-```
-
 `S3: weather/year=2026/month=10/day=14/12-00.json`
 ```json
 [

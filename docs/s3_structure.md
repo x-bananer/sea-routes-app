@@ -9,13 +9,6 @@ Amazon S3
     │   ├── route_02.json
     │   └── route_03.json
     │
-    ├── ratings/
-    │   ├── route_01/
-    │   │   ├── rating_id_1.json # Rating id becomes a name for a file
-    │   │   └── rating_id_2.json
-    │   └── route_02/
-    │       └── rating_id_3.json
-    │
     ├── route_statistics/
     │   ├── route_01.json
     │   └── route_02.json
