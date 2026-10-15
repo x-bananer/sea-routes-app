@@ -1,0 +1,18 @@
+{
+"route_id": "route_01",
+"name": "Hietaniemi-Kaskisaari -Otaniemi",
+"coordinates": [
+{
+"latitude": 60.17318, 
+"longitude": 24.90329
+},
+{
+"latitude": 60.1714, 
+"longitude": 24.86154
+},
+{
+"latitude": 60.17916,
+"longitude": 24.83854
+}
+]
+}
