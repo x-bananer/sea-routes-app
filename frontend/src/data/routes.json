@@ -1,11 +1,11 @@
 [
 	{
-		"route_id": "route_id_1",
+		"route_id": "route_01",
 		"name": "Hietaniemi",
 		"coordinates": [
-			[60.175, 24.912],
-			[60.17, 24.895],
-			[60.162, 24.88]
+			{ "latitude": 60.175, "longitude": 24.912 },
+			{ "latitude": 60.17, "longitude": 24.895 },
+			{ "latitude": 60.162, "longitude": 24.88 }
 		],
 		"overall_rating": 3.9,
 		"total_ratings": 14,
@@ -58,12 +58,12 @@
 		]
 	},
 	{
-		"route_id": "route_id_2",
+		"route_id": "route_02",
 		"name": "Lauttasaari",
 		"coordinates": [
-			[60.158, 24.882],
-			[60.151, 24.874],
-			[60.147, 24.865]
+			{ "latitude": 60.158, "longitude": 24.882 },
+			{ "latitude": 60.151, "longitude": 24.874 },
+			{ "latitude": 60.147, "longitude": 24.865 }
 		],
 		"overall_rating": null,
 		"total_ratings": 0,
@@ -72,12 +72,12 @@
 		"ratings_across_conditions": []
 	},
 	{
-		"route_id": "route_id_3",
+		"route_id": "route_03",
 		"name": "Suomenlinna",
 		"coordinates": [
-			[60.145, 24.99],
-			[60.14, 25],
-			[60.134, 25.01]
+			{ "latitude": 60.145, "longitude": 24.99 },
+			{ "latitude": 60.14, "longitude": 25 },
+			{ "latitude": 60.134, "longitude": 25.01 }
 		],
 		"overall_rating": null,
 		"total_ratings": 0,

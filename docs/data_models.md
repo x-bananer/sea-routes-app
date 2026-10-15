@@ -2,24 +2,24 @@
 
 ## In S3
 
-`S3: routes/route_id_1.json`
+`S3: routes/route_01.json`
 ```json
 {
-  "route_id": "route_id_1",
+  "route_id": "route_01",
   "name": "Hietaniemi",
   "coordinates": [
-    [60.175, 24.912],
-    [60.170, 24.895],
-    [60.162, 24.880]
+    { "latitude": 60.175, "longitude": 24.912 },
+    { "latitude": 60.170, "longitude": 24.895 },
+    { "latitude": 60.162, "longitude": 24.880 }
   ]
 }
 ```
 
-`S3: ratings/route_id_1/rating_id_1.json`
+`S3: ratings/route_01/rating_id_1.json`
 ```json
 {
   "rating_id": "rating_id_1",
-  "route_id": "route_id_1",
+  "route_id": "route_01",
   "start_time": "2026-10-13T12:00:00Z",
   "end_time": "2026-10-13T14:00:00Z",
   "rating": 5
@@ -65,10 +65,10 @@
 ]
 ```
 
-`S3: route_statistics/route_id_1.json`
+`S3: route_statistics/route_01.json`
 ```json
 {
-  "route_id": "route_id_1",
+  "route_id": "route_01",
   "overall_rating": 4.3,
   "total_ratings": 42,
   "ratings_across_conditions": [
@@ -106,35 +106,35 @@
 ```json
 [
   {
-    "route_id": "route_id_1",
+    "route_id": "route_01",
     "name": "Hietaniemi",
     "coordinates": [
-      [60.175, 24.912],
-      [60.170, 24.895],
-      [60.162, 24.880]
+      { "latitude": 60.175, "longitude": 24.912 },
+      { "latitude": 60.170, "longitude": 24.895 },
+      { "latitude": 60.162, "longitude": 24.880 }
     ]
   },
   {
-    "route_id": "route_id_2",
+    "route_id": "route_02",
     "name": "Lauttasaari",
     "coordinates": [
-      [60.158, 24.882],
-      [60.151, 24.874],
-      [60.147, 24.865]
+      { "latitude": 60.158, "longitude": 24.882 },
+      { "latitude": 60.151, "longitude": 24.874 },
+      { "latitude": 60.147, "longitude": 24.865 }
     ]
   }
 ]
 ```
 
-`HTTP response: GET /routes/route_id_1`
+`HTTP response: GET /routes/route_01`
 ```json
 {
-  "route_id": "route_id_1",
+  "route_id": "route_01",
   "name": "Hietaniemi",
   "coordinates": [
-    [60.175, 24.912],
-    [60.170, 24.895],
-    [60.162, 24.880]
+    { "latitude": 60.175, "longitude": 24.912 },
+    { "latitude": 60.170, "longitude": 24.895 },
+    { "latitude": 60.162, "longitude": 24.880 }
   ],
   "overall_rating": 4.3,
   "total_ratings": 42,

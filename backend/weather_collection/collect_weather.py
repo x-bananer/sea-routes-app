@@ -2,7 +2,7 @@
 #
 # The function will:
 # 1. Read all predefined routes from the routes/ folder in S3.
-# 2. Get coordinates of all points from these routes and remove duplicate points.
+# 2. Get latitude and longitude from all route coordinates and remove duplicates.
 # 3. Request weather data from external APIs for each unique point.
 # 4. Check that the received data contains the required weather values.
 # 5. Convert the data from different APIs into one common format.
