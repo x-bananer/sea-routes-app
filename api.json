@@ -1,0 +1,311 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "SeaRoutes API",
+    "description": "API for routes, weather conditions, and user ratings.",
+    "version": "1.0.0"
+  },
+  "paths": {
+    "/routes": {
+      "get": {
+        "summary": "Get all routes",
+        "operationId": "getRoutes",
+        "responses": {
+          "200": {
+            "description": "List of available routes",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Route"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/routes/{route_id}": {
+      "get": {
+        "summary": "Get route details",
+        "operationId": "getRoute",
+        "parameters": [
+          {
+            "name": "route_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "route_01"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Route details, weather, statistics, and suitability",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RouteDetails"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Route not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    },
+    "/routes/{route_id}/ratings": {
+      "post": {
+        "summary": "Submit a route rating",
+        "operationId": "saveRating",
+        "parameters": [
+          {
+            "name": "route_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "example": "route_01"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RatingRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Rating saved successfully"
+          },
+          "400": {
+            "description": "Invalid rating data"
+          },
+          "404": {
+            "description": "Route not found"
+          },
+          "500": {
+            "description": "Internal server error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Coordinate": {
+        "type": "object",
+        "required": [
+          "latitude",
+          "longitude"
+        ],
+        "properties": {
+          "latitude": {
+            "type": "number",
+            "format": "double",
+            "example": 60.175
+          },
+          "longitude": {
+            "type": "number",
+            "format": "double",
+            "example": 24.912
+          }
+        }
+      },
+      "Route": {
+        "type": "object",
+        "required": [
+          "route_id",
+          "name",
+          "coordinates"
+        ],
+        "properties": {
+          "route_id": {
+            "type": "string",
+            "example": "route_01"
+          },
+          "name": {
+            "type": "string",
+            "example": "Hietaniemi"
+          },
+          "coordinates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Coordinate"
+            }
+          }
+        }
+      },
+      "Weather": {
+        "type": "object",
+        "required": [
+          "wind_speed",
+          "wind_direction",
+          "wave_height",
+          "water_temperature",
+          "air_temperature",
+          "cloud_cover"
+        ],
+        "properties": {
+          "wind_speed": {
+            "type": "number",
+            "format": "double",
+            "example": 7.2
+          },
+          "wind_direction": {
+            "type": "number",
+            "format": "double",
+            "example": 220
+          },
+          "wave_height": {
+            "type": "number",
+            "format": "double",
+            "example": 0.5
+          },
+          "water_temperature": {
+            "type": "number",
+            "format": "double",
+            "example": 12
+          },
+          "air_temperature": {
+            "type": "number",
+            "format": "double",
+            "example": 14
+          },
+          "cloud_cover": {
+            "type": "number",
+            "format": "double",
+            "example": 60
+          }
+        }
+      },
+      "WeatherRatingGroup": {
+        "type": "object",
+        "required": [
+          "weather",
+          "average_rating",
+          "total_ratings"
+        ],
+        "properties": {
+          "weather": {
+            "$ref": "#/components/schemas/Weather"
+          },
+          "average_rating": {
+            "type": "number",
+            "format": "double",
+            "minimum": 1,
+            "maximum": 5,
+            "example": 4.8
+          },
+          "total_ratings": {
+            "type": "integer",
+            "minimum": 1,
+            "example": 12
+          }
+        }
+      },
+      "RouteDetails": {
+        "type": "object",
+        "required": [
+          "route_id",
+          "name",
+          "coordinates",
+          "overall_rating",
+          "total_ratings",
+          "ratings_across_conditions",
+          "current_weather",
+          "suitability"
+        ],
+        "properties": {
+          "route_id": {
+            "type": "string",
+            "example": "route_01"
+          },
+          "name": {
+            "type": "string",
+            "example": "Hietaniemi"
+          },
+          "coordinates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Coordinate"
+            }
+          },
+          "overall_rating": {
+            "type": "number",
+            "format": "double",
+            "nullable": true,
+            "minimum": 1,
+            "maximum": 5,
+            "example": 4.3
+          },
+          "total_ratings": {
+            "type": "integer",
+            "minimum": 0,
+            "example": 42
+          },
+          "ratings_across_conditions": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WeatherRatingGroup"
+            }
+          },
+          "current_weather": {
+            "$ref": "#/components/schemas/Weather"
+          },
+          "suitability": {
+            "type": "number",
+            "format": "double",
+            "nullable": true,
+            "minimum": 1,
+            "maximum": 5,
+            "description": "Predicted route suitability based on current weather and historical ratings. Null when there is insufficient data.",
+            "example": 4.7
+          }
+        }
+      },
+      "RatingRequest": {
+        "type": "object",
+        "required": [
+          "start_time",
+          "end_time",
+          "rating"
+        ],
+        "properties": {
+          "start_time": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-13T12:00:00Z"
+          },
+          "end_time": {
+            "type": "string",
+            "format": "date-time",
+            "example": "2026-10-13T14:00:00Z"
+          },
+          "rating": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 5,
+            "example": 5
+          }
+        }
+      }
+    }
+  }
+}
