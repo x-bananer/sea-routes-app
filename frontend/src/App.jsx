@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getRoutes } from "./api";
+import { getRouteDetails, getRoutes, saveRating } from "./api";
 import RoutesMap from "./pages/RoutesMap";
 import RouteDetails from "./pages/RouteDetails";
 import RateRoute from "./pages/RateRoute";
@@ -46,19 +46,24 @@ export default function App() {
 		return () => window.clearTimeout(timeout);
 	}, [notice]);
 
-	const selectRoute = (route) => {
+	const selectRoute = async (route) => {
 		setRouteDetails(route);
 		setScreen("details");
+		setNotice("Loading route details…");
+
+		try {
+			const details = await getRouteDetails(route.route_id);
+			setRouteDetails(details);
+			setNotice("");
+		} catch (error) {
+			setNotice(error.message || "Route details could not be loaded.");
+		}
 	};
 
-	const handleRating = (rating) => {
-		setRouteDetails({
-			...routeDetails,
-			total_ratings: (routeDetails.total_ratings ?? 0) + 1,
-			overall_rating: routeDetails.overall_rating || rating.rating,
-		});
+	const handleRating = async (rating) => {
+		await saveRating(routeDetails.route_id, rating);
 		setModalOpen(false);
-		setNotice("Rating submitted");
+		setNotice("Rating submitted. Statistics will update shortly.");
 	};
 
 	return (
