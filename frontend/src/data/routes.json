@@ -1,6 +1,6 @@
 [
 	{
-		"route_id": "route_01",
+		"id": "route_01",
 		"name": "Hietaniemi",
 		"coordinates": [
 			{ "latitude": 60.175, "longitude": 24.912 },
@@ -58,7 +58,7 @@
 		]
 	},
 	{
-		"route_id": "route_02",
+		"id": "route_02",
 		"name": "Lauttasaari",
 		"coordinates": [
 			{ "latitude": 60.158, "longitude": 24.882 },
@@ -72,7 +72,7 @@
 		"ratings_across_conditions": []
 	},
 	{
-		"route_id": "route_03",
+		"id": "route_03",
 		"name": "Suomenlinna",
 		"coordinates": [
 			{ "latitude": 60.145, "longitude": 24.99 },

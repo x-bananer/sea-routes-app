@@ -131,12 +131,12 @@
       "Route": {
         "type": "object",
         "required": [
-          "route_id",
+          "id",
           "name",
           "coordinates"
         ],
         "properties": {
-          "route_id": {
+          "id": {
             "type": "string",
             "example": "route_01"
           },
@@ -223,7 +223,7 @@
       "RouteDetails": {
         "type": "object",
         "required": [
-          "route_id",
+          "id",
           "name",
           "coordinates",
           "overall_rating",
@@ -233,7 +233,7 @@
           "suitability"
         ],
         "properties": {
-          "route_id": {
+          "id": {
             "type": "string",
             "example": "route_01"
           },

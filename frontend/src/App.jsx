@@ -52,7 +52,7 @@ export default function App() {
 		setNotice("Loading route details…");
 
 		try {
-			const details = await getRouteDetails(route.route_id);
+			const details = await getRouteDetails(route.id);
 			setRouteDetails(details);
 			setNotice("");
 		} catch (error) {
@@ -61,7 +61,7 @@ export default function App() {
 	};
 
 	const handleRating = async (rating) => {
-		await saveRating(routeDetails.route_id, rating);
+		await saveRating(routeDetails.id, rating);
 		setModalOpen(false);
 		setNotice("Rating submitted. Statistics will update shortly.");
 	};

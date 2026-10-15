@@ -5,7 +5,7 @@
 `S3: routes/route_01.json`
 ```json
 {
-  "route_id": "route_01",
+  "id": "route_01",
   "name": "Hietaniemi",
   "coordinates": [
     { "latitude": 60.175, "longitude": 24.912 },
@@ -106,7 +106,7 @@
 ```json
 [
   {
-    "route_id": "route_01",
+    "id": "route_01",
     "name": "Hietaniemi",
     "coordinates": [
       { "latitude": 60.175, "longitude": 24.912 },
@@ -115,7 +115,7 @@
     ]
   },
   {
-    "route_id": "route_02",
+    "id": "route_02",
     "name": "Lauttasaari",
     "coordinates": [
       { "latitude": 60.158, "longitude": 24.882 },
@@ -129,7 +129,7 @@
 `HTTP response: GET /routes/route_01`
 ```json
 {
-  "route_id": "route_01",
+  "id": "route_01",
   "name": "Hietaniemi",
   "coordinates": [
     { "latitude": 60.175, "longitude": 24.912 },

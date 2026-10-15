@@ -88,7 +88,7 @@ def lambda_handler(event, context):
         }
 
     response = {
-        "route_id": route.get("route_id", route_id),
+        "id": route.get("id", route_id),
         "name": route["name"],
         "coordinates": route["coordinates"],
         "overall_rating": statistics.get("overall_rating"),
