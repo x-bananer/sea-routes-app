@@ -1,2 +1,5 @@
 .DS_Store
-
+local_weather/
+local_routes/
+__pycache__/
+*.pyc
