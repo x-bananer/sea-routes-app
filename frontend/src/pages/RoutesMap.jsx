@@ -14,7 +14,7 @@ export default function RoutesMap({ routes, onSelect }) {
 				<h2 id="routes-heading">Routes</h2>
 				<ul className="route-list">
 					{routes.map((route, index) => (
-						<li key={route.route_id}>
+						<li key={route.id}>
 							<button onClick={() => onSelect(route)}>
 								<span
 									className="route-dot"

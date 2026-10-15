@@ -48,9 +48,9 @@ export default function RouteMap({
 					point["latitude"],
 					point["longitude"],
 				]);
-				const selected = route.route_id === selectedRoute?.route_id;
+				const selected = route.id === selectedRoute?.id;
 				return (
-					<Fragment key={route.route_id}>
+					<Fragment key={route.id}>
 						<Polyline
 							positions={positions}
 							pathOptions={{
@@ -68,7 +68,7 @@ export default function RouteMap({
 						</Polyline>
 						{route.coordinates.map((point, pointIndex) => (
 							<CircleMarker
-								key={`${route.route_id}-${pointIndex}`}
+								key={`${route.id}-${pointIndex}`}
 								center={[point["latitude"], point["longitude"]]}
 								radius={selected ? 7 : 6}
 								pathOptions={{

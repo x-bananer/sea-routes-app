@@ -36,7 +36,7 @@ export default function RateRoute({ route, onClose, onSubmit }) {
 		setSubmitting(true);
 		try {
 			await onSubmit({
-				route_id: route.route_id,
+				route_id: route.id,
 				start_time: localToUtc(startTime),
 				end_time: localToUtc(endTime),
 				rating,
