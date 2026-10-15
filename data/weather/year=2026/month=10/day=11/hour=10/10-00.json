@@ -1,0 +1,35 @@
+[
+  {
+    "timestamp": "2026-10-11T10:00:00Z",
+    "latitude": 60.17318,
+    "longitude": 24.90329,
+    "wind_speed": 6.1,
+    "wind_direction": 202,
+    "wave_height": 0.5,
+    "water_temperature": 11.6,
+    "air_temperature": 11.1,
+    "cloud_cover": 98
+  },
+  {
+    "timestamp": "2026-10-11T10:00:00Z",
+    "latitude": 60.1714,
+    "longitude": 24.86154,
+    "wind_speed": 6.3,
+    "wind_direction": 205,
+    "wave_height": 0.5,
+    "water_temperature": 11.6,
+    "air_temperature": 11.2,
+    "cloud_cover": 100
+  },
+  {
+    "timestamp": "2026-10-11T10:00:00Z",
+    "latitude": 60.17916,
+    "longitude": 24.83854,
+    "wind_speed": 6.2,
+    "wind_direction": 206,
+    "wave_height": 0.4,
+    "water_temperature": 11.5,
+    "air_temperature": 11.3,
+    "cloud_cover": 99
+  }
+]
