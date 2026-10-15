@@ -18,7 +18,7 @@ def fetch_api(base_url, variables, latitude, longitude):
         "latitude": latitude,
         "longitude": longitude,
         "current": ",".join(variables),
-        "timezone": "GMT"
+        "timezone": "GMT",
     }
 
     if "marine-api" not in base_url:
@@ -28,6 +28,7 @@ def fetch_api(base_url, variables, latitude, longitude):
 
     with urlopen(url, timeout=10) as response:
         return json.load(response)
+
 
 def load_routes(s3_client=None):
     routes = []
@@ -45,6 +46,7 @@ def load_routes(s3_client=None):
 
     return routes
 
+
 def collect_weather(points):
     if not points:
         return []
@@ -61,17 +63,14 @@ def collect_weather(points):
             "cloud_cover",
         ],
         latitudes,
-        longitudes
+        longitudes,
     )
 
     marine = fetch_api(
         "https://marine-api.open-meteo.com/v1/marine",
-        [
-            "wave_height",
-            "sea_surface_temperature"
-        ],
+        ["wave_height", "sea_surface_temperature"],
         latitudes,
-        longitudes
+        longitudes,
     )
 
     weather_results = weather if isinstance(weather, list) else [weather]
@@ -92,19 +91,15 @@ def collect_weather(points):
             "air_temperature": weather_result["current"]["temperature_2m"],
             "cloud_cover": weather_result["current"]["cloud_cover"],
         }
-        for point, weather_result, marine_result in zip(points, weather_results, marine_results)
+        for point, weather_result, marine_result in zip(
+            points, weather_results, marine_results
+        )
     ]
-
-
 
 
 def lambda_handler(event, context):
     routes = load_routes()
-    points = [
-        point
-        for route in routes
-        for point in route["coordinates"]
-    ]
+    points = [point for route in routes for point in route["coordinates"]]
     results = collect_weather(points)
     points_processed = len(points)
 
@@ -112,14 +107,15 @@ def lambda_handler(event, context):
 
     return {
         "statusCode": 200,
-        "body": json.dumps({
-            "routes_processed": len(routes),
-            "points_processed": points_processed,
-            "s3_path": filepath,
-        }),
+        "body": json.dumps(
+            {
+                "routes_processed": len(routes),
+                "points_processed": points_processed,
+                "s3_path": filepath,
+            }
+        ),
     }
 
 
 if __name__ == "__main__":
     print(lambda_handler({}, None)["body"])
-

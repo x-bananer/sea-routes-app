@@ -5,6 +5,12 @@ import boto3
 
 S3_BUCKET = os.environ.get("S3_BUCKET", "sea-routes-back")
 ROUTES_PREFIX = "routes/"
+CORS_HEADERS = {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "GET, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type",
+}
 
 
 def load_routes(s3_client=None):
@@ -25,8 +31,11 @@ def load_routes(s3_client=None):
 
 
 def lambda_handler(event, context):
+    if event.get("httpMethod") == "OPTIONS":
+        return {"statusCode": 204, "headers": CORS_HEADERS, "body": ""}
+
     return {
         "statusCode": 200,
-        "headers": {"Content-Type": "application/json"},
+        "headers": CORS_HEADERS,
         "body": json.dumps(load_routes()),
     }
