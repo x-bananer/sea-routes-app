@@ -1,12 +1,16 @@
 import json
+import os
 from urllib.request import urlopen
 from urllib.parse import urlencode
-from datetime import datetime, timezone
-from save_weather import save_weather
-from pathlib import Path
+import boto3
 
-LATITUDE = 60.15
-LONGITUDE = 24.92
+try:
+    from .save_weather import save_weather
+except ImportError:
+    from save_weather import save_weather
+
+S3_BUCKET = os.environ.get("S3_BUCKET", "sea-routes-back")
+ROUTES_PREFIX = "routes/"
 
 
 def fetch_api(base_url, variables, latitude, longitude):
@@ -25,29 +29,40 @@ def fetch_api(base_url, variables, latitude, longitude):
     with urlopen(url, timeout=10) as response:
         return json.load(response)
 
-def load_routes():
+def load_routes(s3_client=None):
     routes = []
+    s3_client = s3_client or boto3.client("s3")
 
-    for filepath in Path("local_routes").glob("*.json"):
-        with open(filepath, "r", encoding="utf-8") as file:
-            routes.append(json.load(file))
+    paginator = s3_client.get_paginator("list_objects_v2")
+    for page in paginator.paginate(Bucket=S3_BUCKET, Prefix=ROUTES_PREFIX):
+        for item in page.get("Contents", []):
+            key = item["Key"]
+            if not key.endswith(".json"):
+                continue
+
+            response = s3_client.get_object(Bucket=S3_BUCKET, Key=key)
+            routes.append(json.loads(response["Body"].read().decode("utf-8")))
 
     return routes
 
-def collect_weather(latitude, longitude, route_id):
+def collect_weather(points):
+    if not points:
+        return []
+
+    latitudes = ",".join(str(point["latitude"]) for point in points)
+    longitudes = ",".join(str(point["longitude"]) for point in points)
+
     weather = fetch_api(
         "https://api.open-meteo.com/v1/forecast",
         [
             "temperature_2m",
             "wind_speed_10m",
             "wind_direction_10m",
-            "wind_gusts_10m",
             "cloud_cover",
-            "weather_code"
-            ],
-    latitude,
-    longitude
-)
+        ],
+        latitudes,
+        longitudes
+    )
 
     marine = fetch_api(
         "https://marine-api.open-meteo.com/v1/marine",
@@ -55,48 +70,56 @@ def collect_weather(latitude, longitude, route_id):
             "wave_height",
             "sea_surface_temperature"
         ],
-        latitude,
-        longitude
+        latitudes,
+        longitudes
     )
 
-    
-    return {
-    "route_id": "route_01",
-    "latitude": latitude,
-    "longitude": longitude,
-    "weather_valid_at": weather["current"]["time"] + "Z",
-    "marine_valid_at": marine["current"]["time"] + "Z",
-    "collected_at": datetime.now(timezone.utc).isoformat(),
-    "wind_speed_ms": weather["current"]["wind_speed_10m"],
-    "wind_direction_deg": weather["current"]["wind_direction_10m"],
-    "wind_gust_ms": weather["current"]["wind_gusts_10m"],
-    "air_temperature_c": weather["current"]["temperature_2m"],
-    "cloud_cover_percent": weather["current"]["cloud_cover"],
-    "weather_code": weather["current"]["weather_code"],
-    "wave_height_m": marine["current"]["wave_height"],
-    "water_temperature_c": marine["current"]["sea_surface_temperature"],
-    "source": "open-meteo",
-    "data_type": "forecast"
-}
+    weather_results = weather if isinstance(weather, list) else [weather]
+    marine_results = marine if isinstance(marine, list) else [marine]
+
+    if len(weather_results) != len(points) or len(marine_results) != len(points):
+        raise ValueError("Open-Meteo returned an unexpected number of point results")
+
+    return [
+        {
+            "timestamp": weather_result["current"]["time"] + "Z",
+            "latitude": point["latitude"],
+            "longitude": point["longitude"],
+            "wind_speed": weather_result["current"]["wind_speed_10m"],
+            "wind_direction": weather_result["current"]["wind_direction_10m"],
+            "wave_height": marine_result["current"]["wave_height"],
+            "water_temperature": marine_result["current"]["sea_surface_temperature"],
+            "air_temperature": weather_result["current"]["temperature_2m"],
+            "cloud_cover": weather_result["current"]["cloud_cover"],
+        }
+        for point, weather_result, marine_result in zip(points, weather_results, marine_results)
+    ]
 
 
 
 
-if __name__ == "__main__":
+def lambda_handler(event, context):
     routes = load_routes()
-    results = []
-
-    for route in routes:
-        for point in route["coordinates"]:
-            result = collect_weather(
-                point["latitude"],
-                point["longitude"],
-                route["route_id"]
-            )
-            results.append(result)
+    points = [
+        point
+        for route in routes
+        for point in route["coordinates"]
+    ]
+    results = collect_weather(points)
+    points_processed = len(points)
 
     filepath = save_weather(results)
 
-    print(f"Collected weather for {len(results)} points")
-    print(f"Weather saved to: {filepath}")
+    return {
+        "statusCode": 200,
+        "body": json.dumps({
+            "routes_processed": len(routes),
+            "points_processed": points_processed,
+            "s3_path": filepath,
+        }),
+    }
+
+
+if __name__ == "__main__":
+    print(lambda_handler({}, None)["body"])
 
