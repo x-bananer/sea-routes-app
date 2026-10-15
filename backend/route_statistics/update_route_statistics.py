@@ -1,10 +1,20 @@
 import json
 import os
+import math
 import boto3
 from query_weather_history import query_weather_history, calculate_average_weather
 
 S3_BUCKET = os.environ.get("S3_BUCKET", "sea-routes-back")
 s3 = None
+
+WEATHER_TOLERANCES = {
+    "wind_speed": 2.0,
+    "wave_height": 0.3,
+    "water_temperature": 2.0,
+    "air_temperature": 3.0,
+    "cloud_cover": 20.0,
+}
+WIND_DIRECTION_TOLERANCE = 30.0
 
 
 def load_route(route_id, s3_client=None):
@@ -51,6 +61,36 @@ def update_average_rating(statistics, new_rating):
     return statistics
 
 
+def weather_is_similar(group_weather, weather):
+    for field, tolerance in WEATHER_TOLERANCES.items():
+        if abs(group_weather[field] - weather[field]) > tolerance:
+            return False
+
+    direction_difference = abs(
+        group_weather["wind_direction"] - weather["wind_direction"]
+    )
+    direction_difference = min(direction_difference, 360 - direction_difference)
+
+    return direction_difference <= WIND_DIRECTION_TOLERANCE
+
+
+def update_average_weather(group_weather, weather, old_count):
+    new_count = old_count + 1
+
+    for field in WEATHER_TOLERANCES:
+        group_weather[field] = (
+            group_weather[field] * old_count + weather[field]
+        ) / new_count
+
+    old_direction = math.radians(group_weather["wind_direction"])
+    new_direction = math.radians(weather["wind_direction"])
+    sin_sum = math.sin(old_direction) * old_count + math.sin(new_direction)
+    cos_sum = math.cos(old_direction) * old_count + math.cos(new_direction)
+    group_weather["wind_direction"] = (
+        math.degrees(math.atan2(sin_sum, cos_sum)) + 360
+    ) % 360
+
+
 def update_weather_groups(statistics, weather, rating):
     if weather is None:
         return statistics
@@ -58,12 +98,13 @@ def update_weather_groups(statistics, weather, rating):
     groups = statistics.setdefault("ratings_across_conditions", [])
 
     for group in groups:
-        if group["weather"] == weather:
+        if weather_is_similar(group["weather"], weather):
             old_count = group["total_ratings"]
             group["total_ratings"] = old_count + 1
             group["average_rating"] = (
                 group["average_rating"] * old_count + rating
             ) / group["total_ratings"]
+            update_average_weather(group["weather"], weather, old_count)
             return statistics
 
     groups.append(
