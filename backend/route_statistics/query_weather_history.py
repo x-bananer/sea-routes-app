@@ -4,7 +4,7 @@ import math
 import time
 from datetime import datetime, timezone
 
-ATHENA_DATABASE = os.environ.get("ATHENA_DATABASE", "default")
+ATHENA_DATABASE = "default"
 ATHENA_TABLE = "weather"
 S3_BUCKET = os.environ.get("S3_BUCKET", "sea-routes-back")
 
@@ -69,9 +69,6 @@ def query_weather_history(coordinates, start_time, end_time):
     if start_dt >= end_dt:
         raise ValueError("Start time must be before end time")
 
-    start_date = start_dt.date()
-    end_date = end_dt.date()
-
     coordinate_conditions = []
 
     for point in coordinates:
@@ -95,11 +92,7 @@ def query_weather_history(coordinates, start_time, end_time):
     FROM {ATHENA_TABLE}
     CROSS JOIN UNNEST(records) AS t(w)
     WHERE
-        (
-            (year || '-' || month || '-' || day)
-            BETWEEN '{start_date}' AND '{end_date}'
-        )
-        AND ({coordinates_sql})
+        ({coordinates_sql})
         AND from_iso8601_timestamp(w.timestamp)
             BETWEEN from_iso8601_timestamp('{start_dt.isoformat()}')
             AND from_iso8601_timestamp('{end_dt.isoformat()}')
