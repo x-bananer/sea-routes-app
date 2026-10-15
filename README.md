@@ -4,9 +4,8 @@ SeaRoutes helps people choose sea routes in Helsinki. It is for sailboarders,
 kayakers, windsurfers, and other people who enjoy being on the water.
 
 Most apps show a map and a weather forecast. SeaRoutes also shows how other
-people rated a route in similar weather. It also gives an expected suitability
-score based on current weather and past ratings. This can help users choose a
-route they may enjoy.
+people rated a route in similar weather. It also gives an expected route rating
+for the current weather. This can help users choose a route they may enjoy.
 
 ## Features
 
