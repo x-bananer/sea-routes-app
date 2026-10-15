@@ -1,7 +1,7 @@
 {
   "id": "route_02",
   "name": "Nokkala-Mäntysaari-Lauttasaari",
-  "points": [
+  "coordinates": [
     {
       "latitude": 60.14828,
       "longitude": 24.75437
